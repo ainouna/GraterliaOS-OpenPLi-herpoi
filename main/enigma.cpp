@@ -216,7 +216,7 @@ int main(int argc, char **argv)
 	printf("DVB_API_VERSION %d DVB_API_VERSION_MINOR %d\n", DVB_API_VERSION, DVB_API_VERSION_MINOR);
 
 	// get enigma2 debug level
-	debugLvl = getenv("ENIGMA_DEBUG_LVL") ? atoi(getenv("ENIGMA_DEBUG_LVL")) : atoi(getConfigString("config.usage.e2_debug_level", "4").c_str());
+	debugLvl = getenv("ENIGMA_DEBUG_LVL") ? atoi(getenv("ENIGMA_DEBUG_LVL")) : atoi(getConfigString("config.usage.e2_debug_level", "0").c_str());
 
 	if (debugLvl < 0)
 		debugLvl = 0;
