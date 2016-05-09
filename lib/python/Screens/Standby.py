@@ -46,7 +46,7 @@ class Standby(Screen):
 		print "[Standby] enter standby"
 
 		if os.path.exists("/etc/cron/standby_on"):
-			Console().ePopen("run-parts standby_on")
+			Console().ePopen("/bin/run-parts /etc/cron/standby_on")
 
 		self["actions"] = ActionMap( [ "StandbyActions" ],
 		{
@@ -126,7 +126,7 @@ class Standby(Screen):
 			RecordTimer.RecordTimerEntry.stopTryQuitMainloop()
 		self.avswitch.setInput("ENCODER")
 		if os.path.exists("/etc/cron/standby_off"):
-			Console().ePopen("run-parts standby_off")
+			Console().ePopen("/bin/run-parts /etc/cron/standby_off")
 
 	def __onFirstExecBegin(self):
 		global inStandby
@@ -257,7 +257,7 @@ class TryQuitMainloop(MessageBox):
 			if self.retval == 1:
 				config.misc.DeepStandby.value = True
 				if os.path.exists("/etc/cron/standby_on"):
-					Console().ePopen("run-parts standby_on")
+					Console().ePopen("/bin/run-parts /etc/cron/standby_on")
 			elif not inStandby:
 				config.misc.RestartUI.value = True
 				config.misc.RestartUI.save()
