@@ -2008,6 +2008,7 @@ RESULT eServiceMP3::selectTrack(unsigned int i)
 #endif
 
 	int ret = selectAudioStream(i);
+}
 
 int eServiceMP3::selectAudioStream(int i)
 {
