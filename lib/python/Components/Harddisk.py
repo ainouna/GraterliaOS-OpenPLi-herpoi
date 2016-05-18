@@ -3,6 +3,7 @@ import time
 from os import system, listdir, statvfs, popen, makedirs, stat, major, minor, path, access
 from Tools.Directories import SCOPE_HDD, resolveFilename, pathExists
 from Tools.CList import CList
+from Tools.HardwareInfo import HardwareInfo
 from SystemInfo import SystemInfo
 from Components.Console import Console
 import Task
