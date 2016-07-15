@@ -726,6 +726,12 @@
 		<key id="KEY_F2" mapto="f2_long" flags="l"/>
 		<key id="KEY_F3" mapto="f3" flags="b"/>
 		<key id="KEY_F3" mapto="f3_long" flags="l"/>
+		<key id="KEY_AUX" mapto="HDMIin" flags="b"/>
+		<key id="KEY_AUX" mapto="HDMIin_long" flags="l"/>
+		<key id="KEY_PAGEUP" mapto="pageUp" flags="b"/>
+		<key id="KEY_PAGEUP" mapto="pageUp_long" flags="l"/>
+		<key id="KEY_PAGEDOWN" mapto="pageDown" flags="b"/>
+		<key id="KEY_PAGEDOWN" mapto="pageDown_long" flags="l"/>
 		<key id="KEY_GOTO" mapto="n" flags="b"/>
 		<key id="KEY_GOTO" mapto="n_long" flags="l"/>
 		<key id="KEY_MEDIA" mapto="vod" flags="b"/>
