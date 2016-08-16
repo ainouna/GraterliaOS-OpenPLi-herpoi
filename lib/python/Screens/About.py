@@ -22,7 +22,7 @@ class About(Screen):
 	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.setTitle(_("About"))
-		hddsplit, = skin.parameters.get("AboutHddSplit", (0,))
+		hddsplit = skin.parameters.get("AboutHddSplit", 0)
 
 		AboutText = _("Hardware: ") + about.getHardwareTypeString() + "\n"
 		AboutText += _("CPU: ") + about.getCPUInfoString() + "\n"
@@ -197,7 +197,13 @@ class CommitInfo(Screen):
 			commitlog += 80 * '-' + '\n'
 			commitlog += url.split('/')[-2] + '\n'
 			commitlog += 80 * '-' + '\n'
-			for c in loads(urlopen(url, timeout=5).read()):
+			try:
+				# OpenPli 5.0 uses python 2.7.11 and here we need to bypass the certificate check
+				from ssl import _create_unverified_context
+				log = loads(urlopen(url, timeout=5, context=_create_unverified_context()).read())
+			except:
+				log = loads(urlopen(url, timeout=5).read())
+			for c in log:
 				creator = c['commit']['author']['name']
 				title = c['commit']['message']
 				date = datetime.strptime(c['commit']['committer']['date'], '%Y-%m-%dT%H:%M:%SZ').strftime('%x %X')

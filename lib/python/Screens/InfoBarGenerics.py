@@ -41,8 +41,7 @@ from Tools import Notifications, ASCIItranslit
 from Tools.Directories import fileExists, getRecordingFilename, moveFiles
 from Tools.Command import command
 
-from enigma import eTimer, eServiceCenter, eDVBServicePMTHandler, iServiceInformation, \
-	iPlayableService, eServiceReference, eEPGCache, eActionMap
+from enigma import eTimer, eServiceCenter, eDVBServicePMTHandler, iServiceInformation, iPlayableService, eServiceReference, eEPGCache, eActionMap, getDesktop, eDVBDB
 
 from time import time, localtime, strftime
 import os
@@ -212,6 +211,11 @@ class InfoBarScreenSaver:
 			self.ScreenSaverTimerStart()
 			eActionMap.getInstance().unbindAction('', self.keypressScreenSaver)
 
+class HideVBILine(Screen):
+	def __init__(self, session):
+		self.skin = """<screen position="0,0" size="%s,%s" flags="wfNoBorder" zPosition="1"/>""" % (getDesktop(0).size().width(), getDesktop(0).size().height() / 360 + 1)
+		Screen.__init__(self, session)
+
 class SecondInfoBar(Screen):
 	def __init__(self, session, skinName):
 		Screen.__init__(self, session)
@@ -262,16 +266,21 @@ class InfoBarShowHide(InfoBarScreenSaver):
 			self.secondInfoBarScreenSimple.show()
 			self.actualSecondInfoBarScreen = config.usage.show_simple_second_infobar.value and self.secondInfoBarScreenSimple.skinAttributes and self.secondInfoBarScreenSimple or self.secondInfoBarScreen
 
+		self.hideVBILineScreen = self.session.instantiateDialog(HideVBILine)
+		self.hideVBILineScreen.show()
+
 		self.onLayoutFinish.append(self.__layoutFinished)
 		self.onExecBegin.append(self.__onExecBegin)
 
 	def __onExecBegin(self):
 		self.clearScreenPath()
+		self.showHideVBI()
 
 	def __layoutFinished(self):
 		if self.actualSecondInfoBarScreen:
 			self.secondInfoBarScreen.hide()
 			self.secondInfoBarScreenSimple.hide()
+		self.hideVBILineScreen.hide()
 
 	def __onShow(self):
 		self.__state = self.STATE_SHOWN
@@ -329,6 +338,7 @@ class InfoBarShowHide(InfoBarScreenSaver):
 		if self.execing:
 			if config.usage.show_infobar_on_zap.value:
 				self.doShow()
+		self.showHideVBI()
 
 	def startHideTimer(self):
 		if self.__state == self.STATE_SHOWN and not self.__locked:
@@ -399,6 +409,27 @@ class InfoBarShowHide(InfoBarScreenSaver):
 		self.__locked = self.__locked - 1
 		if self.execing:
 			self.startHideTimer()
+
+	def checkHideVBI(self):
+		service = self.session.nav.getCurrentlyPlayingServiceReference()
+		servicepath = service and service.getPath()
+		if servicepath and servicepath.startswith("/"):
+			if service.toString().startswith("1:"):
+				info = eServiceCenter.getInstance().info(service)
+				service = info and info.getInfoString(service, iServiceInformation.sServiceref)
+				FLAG_HIDE_VBI = 512
+				return service and eDVBDB.getInstance().getFlag(eServiceReference(service)) & FLAG_HIDE_VBI and True
+			else:
+				return ".hidvbi." in servicepath.lower()
+		service = self.session.nav.getCurrentService()
+		info = service and service.info()
+		return info and info.getInfo(iServiceInformation.sHideVBI)
+
+	def showHideVBI(self):
+		if self.checkHideVBI():
+			self.hideVBILineScreen.show()
+		else:
+			self.hideVBILineScreen.hide()
 
 class BufferIndicator(Screen):
 	def __init__(self, session):
@@ -1140,10 +1171,10 @@ class InfoBarEPG:
 		service = self.session.nav.getCurrentService()
 		info = service and service.info()
 		ptr = info and info.getEvent(0)
-		if ptr:
+		if ptr and ptr.getEventName() != "":
 			epglist.append(ptr)
 		ptr = info and info.getEvent(1)
-		if ptr:
+		if ptr and ptr.getEventName() != "":
 			epglist.append(ptr)
 		self.epglist = epglist
 
@@ -3334,19 +3365,33 @@ class InfoBarPowersaver:
 		if config.usage.inactivity_timer_blocktime.value:
 			curtime = localtime(time())
 			if curtime.tm_year > 1970: #check if the current time is valid
+				duration = blocktime = extra_time = False
+				if config.usage.inactivity_timer_blocktime_by_weekdays.value:
+					weekday = curtime.tm_wday
+					if config.usage.inactivity_timer_blocktime_day[weekday].value:
+						blocktime = True
+						begintime = tuple(config.usage.inactivity_timer_blocktime_begin_day[weekday].value)
+						endtime = tuple(config.usage.inactivity_timer_blocktime_end_day[weekday].value)
+						extra_time = config.usage.inactivity_timer_blocktime_extra_day[weekday].value
+						begintime_extra = tuple(config.usage.inactivity_timer_blocktime_extra_begin_day[weekday].value)
+						endtime_extra = tuple(config.usage.inactivity_timer_blocktime_extra_end_day[weekday].value)
+				else:
+					blocktime = True
+					begintime = tuple(config.usage.inactivity_timer_blocktime_begin.value)
+					endtime = tuple(config.usage.inactivity_timer_blocktime_end.value)
+					extra_time = config.usage.inactivity_timer_blocktime_extra.value
+					begintime_extra = tuple(config.usage.inactivity_timer_blocktime_extra_begin.value)
+					endtime_extra = tuple(config.usage.inactivity_timer_blocktime_extra_end.value)
 				curtime = (curtime.tm_hour, curtime.tm_min, curtime.tm_sec)
-				begintime = tuple(config.usage.inactivity_timer_blocktime_begin.value)
-				endtime = tuple(config.usage.inactivity_timer_blocktime_end.value)
-				begintime_extra = tuple(config.usage.inactivity_timer_blocktime_extra_begin.value)
-				endtime_extra = tuple(config.usage.inactivity_timer_blocktime_extra_end.value)
-				if begintime <= endtime and (curtime >= begintime and curtime < endtime) or begintime > endtime and (curtime >= begintime or curtime < endtime) or config.usage.inactivity_timer_blocktime_extra.value and\
-				(begintime_extra <= endtime_extra and (curtime >= begintime_extra and curtime < endtime_extra) or begintime_extra > endtime_extra and (curtime >= begintime_extra or curtime < endtime_extra)):
+				if blocktime and (begintime <= endtime and (curtime >= begintime and curtime < endtime) or begintime > endtime and (curtime >= begintime or curtime < endtime)):
 					duration = (endtime[0]*3600 + endtime[1]*60) - (curtime[0]*3600 + curtime[1]*60 + curtime[2])
-					if duration:
-						if duration < 0:
-							duration += 24*3600
-						self.inactivityTimer.startLongTimer(duration)
-						return
+				elif extra_time and (begintime_extra <= endtime_extra and (curtime >= begintime_extra and curtime < endtime_extra) or begintime_extra > endtime_extra and (curtime >= begintime_extra or curtime < endtime_extra)):
+					duration = (endtime_extra[0]*3600 + endtime_extra[1]*60) - (curtime[0]*3600 + curtime[1]*60 + curtime[2])
+				if duration:
+					if duration < 0:
+						duration += 24*3600
+					self.inactivityTimer.startLongTimer(duration)
+					return
 		if Screens.Standby.inStandby:
 			self.inactivityTimeoutCallback(True)
 		else:
