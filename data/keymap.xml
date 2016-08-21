@@ -186,8 +186,9 @@
 	<map context="InfobarActions">
 		<key id="KEY_PLAY" mapto="showMovies" flags="m"/>
 		<key id="KEY_GOTO" mapto="showMovies" flags="b"/>
-		<key id="KEY_PVR" mapto="toogleTvRadio" flags="b"/>
+		<key id="KEY_PVR" mapto="toggleTvRadio" flags="b"/>
 		<key id="KEY_MODE" mapto="ScartHdmi" flags="b"/>
+		<!--key id="KEY_TV" mapto="showTv" flags="b"/-->
 		<!--key id="KEY_MODE" mapto="aspect" flags="m" /-->
 		<!--key id="KEY_MODE" mapto="resolution" flags="m" /-->
 		<!--key id="KEY_SUBTITLE" mapto="restart_softcam" flags="m" /-->
@@ -198,7 +199,7 @@
 		<!--key id="KEY_RIGHT" mapto="volumeUp" flags="m" /-->
 		<key id="KEY_TEXT" mapto="showText" flags="b"/>
 	</map>
-	
+
 	<map context="InfobarAudioSelectionActions">
 		<key id="KEY_OPTION" mapto="audioSelection" flags="b"/>
 		<key id="KEY_SUBTITLE" mapto="audioSelection" flags="b"/>
@@ -449,12 +450,13 @@
 		<key id="KEY_INFO" mapto="info" flags="m"/>
 		<key id="KEY_MENU" mapto="menu" flags="m"/>
 		<key id="KEY_OPTION" mapto="input_date_time" flags="m"/>
+		<key id="KEY_GOTO" mapto="preview" flags="m"/>
 		<!--key id="KEY_3" mapto="nextDay" flags="m"/-->
 		<!--key id="KEY_1" mapto="prevDay" flags="m"/-->
-		<!--key id="KEY_PAGEUP" mapto="nextService" flags="m"/-->
-		<!--key id="KEY_PAGEDOWN" mapto="prevService" flags="m"/-->
-		<!--key id="KEY_PAGEUP" mapto="nextBouquet" flags="m"/-->
-		<!--key id="KEY_PAGEDOWN" mapto="prevBouquet" flags="m"/-->
+		<key id="KEY_1" mapto="nextService" flags="m"/>
+		<key id="KEY_3" mapto="prevService" flags="m"/>
+		<key id="KEY_7" mapto="nextBouquet" flags="m"/>
+		<key id="KEY_9" mapto="prevBouquet" flags="m"/>
 		<!--key id="KEY_REWIND" mapto="prevBouquet" flags="m" /-->
 		<!--key id="KEY_FASTFORWARD" mapto="nextBouquet" flags="m" /-->
 		<key id="KEY_REWIND" mapto="prevDay" flags="m"/>
@@ -477,6 +479,7 @@
 		<key id="KEY_PREVIOUS" mapto="prevService" flags="m"/>
 		<key id="KEY_PROGRAM" mapto="timerAdd" flags="m"/>
 		<key id="KEY_TV" mapto="preview" flags="m"/>
+		<key id="KEY_GOTO" mapto="preview" flags="m"/>
 		<key id="KEY_PVR" mapto="window" flags="m"/>
 		<key id="KEY_REWIND" mapto="prevDay" flags="m"/>
 		<key id="KEY_FASTFORWARD" mapto="nextDay" flags="m"/>
@@ -639,6 +642,11 @@
 		<key id="KEY_PLAY" mapto="play" flags="m"/>
 		<key id="KEY_STOP" mapto="stop" flags="b"/>
 		<key id="KEY_STOP" mapto="shift_stop" flags="l"/>
+		<key id="KEY_TV" mapto="stop" flags="b"/>
+		<key id="KEY_TV" mapto="shift_stop" flags="l"/>
+		<key id="KEY_TV2" mapto="stop" flags="b"/>
+		<key id="KEY_TV2" mapto="shift_stop" flags="l"/>
+
 		<key id="KEY_MENU" mapto="menu" flags="m"/>
 		<key id="KEY_OPTION" mapto="menu" flags="m"/>
 		<!--key id="KEY_HELP" mapto="menu" flags="m"/-->
@@ -662,8 +670,12 @@
 		<key id="KEY_BLUE" mapto="blue_long" flags="l"/>
 		<key id="KEY_RECORD" mapto="rec" flags="b"/>
 		<key id="KEY_RECORD" mapto="rec_long" flags="l"/>
-		<key id="KEY_RADIO" mapto="radio" flags="m"/>
-		<key id="KEY_TV" mapto="showTv" flags="m"/>
+		<key id="KEY_RADIO" mapto="radio" flags="b"/>
+		<key id="KEY_RADIO" mapto="radio_long" flags="l"/>
+		<key id="KEY_TV" mapto="showTv" flags="b"/>
+		<key id="KEY_TV" mapto="showTv_long" flags="l"/>
+		<key id="KEY_TV2" mapto="toggleTvRadio" flags="b"/>
+		<key id="KEY_TV2" mapto="toggleTvRadio_long" flags="l"/>
 		<key id="KEY_TEXT" mapto="text" flags="b"/>
 		<key id="KEY_TEXT" mapto="text_long" flags="l"/>
 		<key id="KEY_HELP" mapto="displayHelp" flags="b"/>

@@ -55,7 +55,7 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 				"showMovies": (self.showMovies, _("Play recorded movies...")),
 				"showRadio": (self.showRadio, _("Show the radio player...")),
 				"showTv": (self.showTv, _("Show the tv player...")),
-				"toogleTvRadio": (self.toogleTvRadio, _("toggels betwenn tv and radio...")),
+				"toggleTvRadio": (self.toggleTvRadio, _("Toggle the tv and the radio player...")),
 				"volumeUp": (self._volUp, _("Volume up")),
 				"volumeDown": (self._volDown, _("Volume down")),
 				"resolution": (self.resolution, _("Open resolution menu")),
@@ -67,6 +67,7 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 				"restart_softcam": (self.restartSoftcam, _("Restart softcam")),
 			}, prio=2)
 
+		self.radioTV = 0
 		self.allowPiP = True
 
 		for x in HelpableScreen, \
@@ -192,24 +193,6 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 		self.__serviceStarted(True)
 		self.onExecBegin.remove(self.__checkServiceStarted)
 
-	def toogleTvRadio(self): 
-		service = self.session.nav.getCurrentService()
-		if service:
-			info = service.info()
-			if info:
-				AudioPID = info.getInfo(iServiceInformation.sAudioPID)
-				VideoPID = info.getInfo(iServiceInformation.sVideoPID)
-
-				print "sAudioPID", AudioPID
-				print "sVideoPID", VideoPID
-
-				if VideoPID == -1:
-					print "radio->tv"
-					self.showTv2()
-				else:
-					print "tv->radio"
-					self.showRadio2()
-
 	def serviceStarted(self):  #override from InfoBarShowHide
 		new = self.servicelist.newServicePlayed()
 		if self.execing:
@@ -233,6 +216,14 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 			from Screens.ChannelSelection import ChannelSelectionRadio
 			self.session.openWithCallback(self.ChannelSelectionRadioClosed, ChannelSelectionRadio, self)
 
+	def toggleTvRadio(self):
+		if self.radioTV == 1:
+			self.radioTV = 0
+			self.showTv()
+		else:
+			self.radioTV = 1
+			self.showRadio()
+	
 	def showTv2(self):
 		self.showTvChannelList(False)
 		self.openServiceList()
@@ -394,7 +385,7 @@ class MoviePlayer(InfoBarBase, InfoBarShowHide, InfoBarMenu, InfoBarSeek, InfoBa
 		if not config.movielist.stop_service.value:
 			Screens.InfoBar.InfoBar.instance.callServiceStarted()
 		self.session.nav.playService(self.lastservice)
-		config.usage.last_movie_played.value = self.cur_service.toString()
+		config.usage.last_movie_played.value = self.cur_service and self.cur_service.toString() or ""
 		config.usage.last_movie_played.save()
 
 	def standbyCountChanged(self, value):
