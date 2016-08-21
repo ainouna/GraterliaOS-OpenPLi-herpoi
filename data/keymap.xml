@@ -703,8 +703,8 @@
 		<key id="KEY_SCREEN" mapto="activatePiP" flags="m"/>
 		<key id="KEY_PLAYPAUSE" mapto="playpause" flags="m"/>
         <key id="KEY_TIME" mapto="timeshift" flags="m"/>
-        <key id="KEY_SEARCH" mapto="search" flags="b"/>
-        <key id="KEY_SEARCH" mapto="search_long" flags="l"/>
+		<key id="KEY_SEARCH" mapto="search" flags="b"/>
+		<key id="KEY_SEARCH" mapto="search_long" flags="l"/>
         <key id="KEY_RESTART" mapto="slow" flags="m"/>
         <key id="KEY_BOOKMARKS" mapto="mark" flags="b"/>
 		<key id="KEY_BOOKMARKS" mapto="mark_long" flags="l"/>
@@ -738,5 +738,11 @@
 		<key id="KEY_SUBTITLE" mapto="star_long" flags="l"/>
 		<key id="KEY_MODE" mapto="monkey" flags="b"/>
 		<key id="KEY_MODE" mapto="monkey_long" flags="l"/>
+		<key id="KEY_AUX" mapto="HDMIin" flags="b"/>
+		<key id="KEY_AUX" mapto="HDMIin_long" flags="l"/>
+		<!--key id="KEY_PAGEUP" mapto="pageUp" flags="b"/>
+		<key id="KEY_PAGEUP" mapto="pageUp_long" flags="l"/>
+		<key id="KEY_PAGEDOWN" mapto="pageDown" flags="b"/>
+		<key id="KEY_PAGEDOWN" mapto="pageDown_long" flags="l"/-->
 	</map> 
 </keymap>
