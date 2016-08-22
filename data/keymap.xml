@@ -453,10 +453,10 @@
 		<key id="KEY_GOTO" mapto="preview" flags="m"/>
 		<!--key id="KEY_3" mapto="nextDay" flags="m"/-->
 		<!--key id="KEY_1" mapto="prevDay" flags="m"/-->
-		<key id="KEY_1" mapto="nextService" flags="m"/>
-		<key id="KEY_3" mapto="prevService" flags="m"/>
-		<key id="KEY_7" mapto="nextBouquet" flags="m"/>
-		<key id="KEY_9" mapto="prevBouquet" flags="m"/>
+		<key id="KEY_3" mapto="nextService" flags="m"/>
+		<key id="KEY_1" mapto="prevService" flags="m"/>
+		<key id="KEY_9" mapto="nextBouquet" flags="m"/>
+		<key id="KEY_7" mapto="prevBouquet" flags="m"/>
 		<!--key id="KEY_REWIND" mapto="prevBouquet" flags="m" /-->
 		<!--key id="KEY_FASTFORWARD" mapto="nextBouquet" flags="m" /-->
 		<key id="KEY_REWIND" mapto="prevDay" flags="m"/>
