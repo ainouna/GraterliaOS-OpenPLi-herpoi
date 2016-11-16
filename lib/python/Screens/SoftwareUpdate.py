@@ -244,7 +244,7 @@ class UpdatePlugin(Screen, ProtectedScreen):
 					error = _("Update failed. Your receiver does not have a working internet connection.")
 				self.status.setText(_("Error") +  " - " + error)
 		elif event == IpkgComponent.EVENT_LISTITEM:
-			if 'enigma2-plugin-settings-' in param[0] and self.channellist_only > 0:
+			if 'enigma2-plugin-channels-' in param[0] and self.channellist_only > 0:
 				self.channellist_name = param[0]
 				self.channellist_only = 2
 		#print event, "-", param
