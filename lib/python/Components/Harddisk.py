@@ -677,7 +677,7 @@ class HarddiskManager:
 			else:
 				dev = None
 			if HardwareInfo().get_device_model().startswith('vusolo4k'):
-				devlist = [1, 7, 31, 253, 254, 179] # ram, loop, mtdblock, romblock, ramzswap, mmc
+				devlist = [1, 7, 31, 253, 254] + (SystemInfo["HasMMC"] and [179] or []) # ram, loop, mtdblock, romblock, ramzswap, mmc
 			else:
 				devlist = [1, 7, 31, 253, 254] # ram, loop, mtdblock, romblock, ramzswap
 			if dev in devlist:
