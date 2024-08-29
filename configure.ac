@@ -11,6 +11,7 @@ AC_SYS_LARGEFILE
 
 AC_PROG_CC
 AC_PROG_CXX
+AX_CXX_COMPILE_STDCXX_11
 m4_ifdef([LT_INIT], [LT_INIT], [AC_PROG_LIBTOOL])
 AC_CONFIG_MACRO_DIR([m4])
 AC_OPENMP()
@@ -33,15 +34,14 @@ dnl versions of gstreamer and plugins-base
 AC_ARG_WITH(gstversion,
 	AS_HELP_STRING([--with-gstversion],[use gstreamer version (major.minor)]),
 	[GST_MAJORMINOR=$withval],[GST_MAJORMINOR=0.10])
-
-AC_ARG_ENABLE(libeplayer3,
-	[  --enable-libeplayer3          enable TDT libeplayer3 as player engine supportt],
-	[AC_DEFINE(ENABLE_LIBEPLAYER3,1,[enable TDT libeplayer3 as player engine support])])
-
-AM_CONDITIONAL(ENABLE_LIBEPLAYER3,test "$enable_libeplayer3" = "yes")
-if test "$enable_libeplayer3" = "yes"; then
-	AC_DEFINE(ENABLE_LIBEPLAYER3,1,[include TDT libeplayer3 as player engine support])
+AC_ARG_WITH(libeplayer3,
+	AS_HELP_STRING([--with-libeplayer3],[use libeplayer3 as player engine support, yes or no]),
+	[with_libeplayer3=$withval],[with_libeplayer3=no])
+if test "$with_libeplayer3" = "yes"; then
+	PKG_CHECK_MODULES(LIBXINE, libeplayer3)
+	AC_DEFINE([ENABLE_LIBEPLAYER3],[1],[Define to 1 if you have libeplayer3])
 fi
+AM_CONDITIONAL(ENABLE_LIBEPLAYER3, test "$with_libeplayer3" = "yes")
 
 AC_ARG_ENABLE(mediafwgstreamer,
 	[  --enable-mediafwgstreamer      enable gstreamer as player engine supportt],
@@ -56,10 +56,50 @@ if test "$enable_mediafwgstreamer" = "yes"; then
 	PKG_CHECK_MODULES(GSTREAMER, gstreamer-$GST_MAJORMINOR gstreamer-pbutils-$GST_MAJORMINOR)
 	PKG_CHECK_MODULES(BASE, [freetype2 fribidi gstreamer-$GST_MAJORMINOR gstreamer-pbutils-$GST_MAJORMINOR libdvbsi++ libpng libxml-2.0 sigc++-1.2 libssl libcrypto])
 else
-	PKG_CHECK_MODULES(BASE, [freetype2 fribidi libdvbsi++ libpng libxml-2.0 sigc++-1.2 libssl libcrypto])
+	PKG_CHECK_MODULES(BASE, [freetype2 fribidi glib-2.0 libdvbsi++ libpng libxml-2.0 sigc++-1.2 libssl libcrypto])
 fi
+
+
+
+
 PKG_CHECK_MODULES(LIBDDVD, libdreamdvd, HAVE_LIBDDVD="yes", HAVE_LIBDDVD="no")
 AM_CONDITIONAL(HAVE_LIBDDVD, test "$HAVE_LIBDDVD" = "yes")
+
+AC_ARG_ENABLE(run_from_usb,
+	[  --enable-run_from_usb      enable run_from_usb stuff],
+	[AC_DEFINE(ENABLE_RUN_FROM_USB, 1, [enable run_from_usb stuff])])
+AM_CONDITIONAL(ENABLE_RUN_FROM_USB, test "$enable_run_from_usb" = "yes")
+if test "$run_from_usb" = "yes"; then
+	AC_DEFINE(ENABLE_RUN_FROM_USB, 1, [enable run_from_usb stuff])
+fi
+
+AC_ARG_ENABLE(hs7429,
+	[  --enable-hs7429            enable hs7429 stuff],
+	[AC_DEFINE(ENABLE_HS7429, 1, [enable hs7429 stuff])])
+	
+AM_CONDITIONAL(ENABLE_HS7429, test "$enable_hs7429" = "yes")
+if test "$enable_hs7429" = "yes"; then
+	AC_DEFINE(ENABLE_HS7429, 1, [enable hs7429 stuff])
+fi
+
+AC_ARG_ENABLE(spark,
+	[  --enable-spark          enable spark stuff],
+	[AC_DEFINE(ENABLE_SPARK,1,[enable spark stuff])])
+
+AM_CONDITIONAL(ENABLE_SPARK,test "$enable_spark" = "yes")
+if test "$enable_spark" = "yes"; then
+	AC_DEFINE(ENABLE_SPARK,1,[enable spark stuff])
+fi
+
+AC_ARG_ENABLE(spark7162,
+	[  --enable-spark7162          enable spark7162 stuff],
+	[AC_DEFINE(ENABLE_SPARK7162,1,[enable spark7162 stuff])])
+
+AM_CONDITIONAL(ENABLE_SPARK7162,test "$enable_spark7162" = "yes")
+if test "$enable_spark7162" = "yes"; then
+	AC_DEFINE(ENABLE_SPARK7162,1,[enable spark7162 stuff])
+fi
+
 
 AC_ARG_ENABLE([tf7700],
 	[AS_HELP_STRING(--enable-tf7700,    enable topfield tf7700 stuff)],
