@@ -8,7 +8,7 @@ if GOSHardwareInfo().get_rcstype() == 'UHD88':
     vfdSIZE += 1
 
 
-PERCENTAGE_START = 20
+PERCENTAGE_START = 80
 PERCENTAGE_END = 100
 LAST_PERCENTAGE = 0
 profile_start = time.time()
